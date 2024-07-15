@@ -1,0 +1,289 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ProClinic-Bootstrap4 Hospital Admin</title>
+    <!-- Fav  Icon Link -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- themify icons CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- Animations CSS -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/green.css' %}" id="style_theme">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <!-- morris charts -->
+    <link rel="stylesheet" href="{% static 'charts/css/morris.css' %}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="{% static 'css/jquery-jvectormap.css' %}">
+
+    <script src="{% static 'js/modernizr.min.js' %}"></script>
+</head>
+
+<body>
+	<!-- Color Changer -->
+	<div class="theme-settings" id="switcher">
+		<span class="theme-click">
+			<span class="ti-settings"></span>
+		</span>
+		<span class="theme-color theme-default theme-active" data-color="green"></span>
+		<span class="theme-color theme-blue" data-color="blue"></span>
+		<span class="theme-color theme-red" data-color="red"></span>
+		<span class="theme-color theme-violet" data-color="violet"></span>
+		<span class="theme-color theme-yellow" data-color="yellow"></span>
+	</div>
+	<!-- /Color Changer -->
+	<div class="wrapper">		
+		<!-- Page Content -->
+		<div id="content">
+			<!-- Top Navigation -->
+			<div class="container top-brand">
+				<nav class="navbar navbar-default">			
+					<div class="navbar-header">
+						<div class="sidebar-header"> <a href="{%url 'index'%}"><img src="{% static 'images/logo-dark.png' %}" class="logo" alt="logo"></a>
+						</div>
+					</div>
+					<ul class="nav justify-content-end">
+						<li class="nav-item">
+							<a class="nav-link">
+								<span title="Fullscreen" class="ti-fullscreen fullscreen"></span>
+							</a>							
+						</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+							 aria-expanded="false">
+								<span class="ti-user"></span>
+							</a>
+							<div class="dropdown-menu proclinic-box-shadow2 profile animated flipInY">
+								<h5>{{user.username}}</h5>
+								<a class="dropdown-item" href="{%url 'logout'%}">
+									<span class="ti-power-off"></span> Logout</a>
+							</div>
+						</li>
+					</ul>
+			
+				</nav>
+			</div>
+			<!-- /Top Navigation -->
+			<!-- Menu -->
+			<div class="container menu-nav">
+				{%include 'nav.html' with active_page="dashboard"%}
+			</div>
+			<!-- /Menu -->
+			<!-- Breadcrumb -->
+			<!-- Page Title -->
+			<div class="container mt-0">
+				<div class="row breadcrumb-bar">
+					<div class="col-md-6">
+						<h3 class="block-title">Quick Statistics</h3>
+					</div>
+					<div class="col-md-6">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="{%url 'index'%}">
+									<span class="ti-home"></span>
+								</a>
+							</li>
+							<li class="breadcrumb-item active">Dashboard</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Title -->
+			<!-- /Breadcrumb -->
+			<!-- Main Content -->
+			<div class="container home">
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-red">
+							<div class="widget-left">
+								<span class="ti-user"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Patients</h4>
+								<span class="numeric color-red">{{patient_count}}</span>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+					<!-- Widget Item -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-green">
+							<div class="widget-left">
+								<span class="ti-bar-chart"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Appointments</h4>
+								<span class="numeric color-green">{{appointment_count}}</span>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+					<!-- Widget Item -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-yellow">
+							<div class="widget-left">
+								<span class="ti-money"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Total Revenue</h4>
+								<span class="numeric color-yellow">${{total_payments}}</span>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-6">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments Year by Year</h3>
+							<div id="lineMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+					<!-- Widget Item -->
+					<div class="col-md-6">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title"> Patients by Age</h3>
+							<div id="barMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-12">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments</h3>
+							<div class="table-responsive">
+								<table class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Patient Name</th>
+											<th>Doctor</th>
+											<th>Check-Up</th>
+											<th>Date</th>
+											<th>Time</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for appointment in appointments %}
+										<tr>
+											<td>{{appointment.patient.name}}</td>
+											<td>{{appointment.doctor.name}}</td>
+											<td>{{appointment.department}}</td>
+											<td>{{appointment.appointment_date}}</td>
+											<td>{{appointment.time_slot}}</td>
+											<td>
+												{% if appointment.status == 'Pending' %}
+												<span class="badge badge-warning">Pending</span>
+												{% elif appointment.status == 'Completed' %}
+												<span class="badge badge-primary">Completed</span>
+												{% else %}
+												<span class="badge badge-danger">Cancelled</span>
+												{% endif %}									
+											</td>
+										 </tr>
+										
+										{%endfor%}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-sm-6">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments Status</h3>
+							<div id="donutMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+					<!-- Widget Item -->
+					<div class="col-md-6">
+						<div class="widget-area-2 progress-status proclinic-box-shadow">
+							<h3 class="widget-title">Doctors Availability</h3>
+							<div class="table-responsive">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>Doctor</th>
+											<th>Speciality</th>
+											<th>Availability</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for doctor in doctors %}
+										<tr>
+											<td>{{ doctor.name }}</td>
+											<td>{{ doctor.specialization }}</td>
+											<td>
+												{% if doctor.availability == "Available" %}
+													<span class="badge badge-success">Available</span>
+												{% else %}
+													<span class="badge badge-danger">Not Available</span>
+												{% endif %}
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+
+				</div>
+
+			</div>
+			<!-- /Main Content -->
+			<!--Copy Rights-->
+			<div class="container">
+				<div class="d-sm-flex justify-content-center">
+				  <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
+				</div>
+			</div>
+			<!-- /Copy Rights-->
+		</div>
+		<!-- /Page Content -->
+	</div>
+	<!-- Back to Top -->
+	<a id="back-to-top" href="#" class="back-to-top">
+		<span class="ti-angle-up"></span>
+	</a>
+	<!-- /Back to Top -->
+	<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<!-- morris charts -->
+	<script src="{% static 'charts/js/raphael-min.js'%}"></script>
+	<script src="{% static 'charts/js/morris.min.js'%}"></script>
+	<script src="{% static 'js/custom-morris.js'%}"></script>
+
+	<!-- Custom Script-->
+	<script src="{% static 'js/custom.js'%}"></script>
+</body>
+
+
+</html>
