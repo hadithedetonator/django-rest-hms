@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+
+
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ProClinic-Bootstrap4 Hospital Admin</title>
+	<!-- Fav Icon Link -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}">
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<!-- themify icons CSS -->
+	<link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+	<!-- Animations CSS -->
+	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" href="{% static 'css/green.css' %}" id="style_theme">
+	<link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+	<!-- morris charts -->
+	<link rel="stylesheet" href="{% static 'charts/css/morris.css' %}">
+	<!-- jvectormap -->
+	<link rel="stylesheet" href="{% static 'css/jquery-jvectormap.css' %}">
+	<link rel="stylesheet" href="{% static 'datatable/dataTables.bootstrap4.min.css' %}">
+
+	<script src="{% static 'js/modernizr.min.js' %}"></script>
+</head>
+
+<body>
+	<!-- Pre Loader -->
+	<div class="loading">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
+	<!--/Pre Loader -->
+	<!-- Color Changer -->
+	<div class="theme-settings" id="switcher">
+		<span class="theme-click">
+			<span class="ti-settings"></span>
+		</span>
+		<span class="theme-color theme-default theme-active" data-color="green"></span>
+		<span class="theme-color theme-blue" data-color="blue"></span>
+		<span class="theme-color theme-red" data-color="red"></span>
+		<span class="theme-color theme-violet" data-color="violet"></span>
+		<span class="theme-color theme-yellow" data-color="yellow"></span>
+	</div>
+	<!-- /Color Changer -->
+	<div class="wrapper">
+		<!-- Page Content -->
+		<div id="content"><!-- Top Navigation -->
+			<div class="container top-brand">
+				<nav class="navbar navbar-default">
+					<div class="navbar-header">
+						<div class="sidebar-header"> <a href="{%url 'index'%}"><img
+									src="{% static 'images/logo-dark.png' %}" class="logo" alt="logo"></a>
+						</div>
+					</div>
+					<ul class="nav justify-content-end">
+						<li class="nav-item">
+							<a class="nav-link">
+								<span title="Fullscreen" class="ti-fullscreen fullscreen"></span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+								aria-haspopup="true" aria-expanded="false">
+								<span class="ti-user"></span>
+							</a>
+							<div class="dropdown-menu proclinic-box-shadow2 profile animated flipInY">
+								<h5>{{user.username}}</h5>
+								<a class="dropdown-item" href="{%url 'logout'%}">
+									<span class="ti-power-off"></span> Logout</a>
+							</div>
+						</li>
+					</ul>
+
+				</nav>
+			</div>
+			<!-- /Top Navigation -->
+			<!-- Menu -->
+			<div class="container menu-nav">
+				{% include 'nav.html'%}
+
+			</div>
+			<!-- /Menu -->
+			<!-- Breadcrumb -->
+			<!-- Page Title -->
+			<div class="container mt-0">
+				<div class="row breadcrumb-bar">
+					<div class="col-md-6">
+						<h3 class="block-title">Appointments</h3>
+					</div>
+					<div class="col-md-6">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="{%url 'index'%}">
+									<span class="ti-home"></span>
+								</a>
+							</li>
+							<li class="breadcrumb-item">Appointments</li>
+							<li class="breadcrumb-item active">Appointments List</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Title -->
+
+			<!-- /Breadcrumb -->
+			<div class="modal fade" id="editAppointmentModal" tabindex="-1" role="dialog"
+				aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editAppointmentModalLabel">Edit Appointment</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="editAppointmentForm" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="appointment-date">Date</label>
+										<input type="date" class="form-control" name="appointment_date"
+											id="appointment-date">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="time-slot">Time Slot</label>
+										<input type="text" class="form-control" name="time_slot" id="time-slot">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="patient-name">Patient Name</label>
+										<input type="text" class="form-control" name="patient_name" id="patient-name">
+										<!-- Add these inside the form, but outside of any other input groups -->
+										<input type="hidden" id="patient-id" name="patient">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="doctor-name">Doctor Name</label>
+										<input type="text" class="form-control" name="doctor_name" id="doctor-name">
+										<input type="hidden" id="doctor-id" name="doctor">
+
+									</div>
+									<div class="form-group col-md-6">
+										<label for="problem">Problem</label>
+										<input type="text" class="form-control" name="problem" id="problem">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="status">Status</label>
+										<select class="form-control" name="status" id="status">
+											<option value="Pending">Pending</option>
+											<option value="Completed">Completed</option>
+											<option value="Cancelled">Cancelled</option>
+										</select>
+									</div>
+									<div class="form-check col-md-12 mb-2">
+										<div class="custom-control custom-checkbox">
+											<input class="custom-control-input" type="checkbox" id="confirm">
+											<label class="custom-control-label" for="confirm">Please Confirm</label>
+										</div>
+									</div>
+									<div class="form-group col-md-6 mb-3">
+										<button type="submit" class="btn btn-primary btn-lg">Update</button>
+									</div>
+								</div>
+							</form>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Main Content -->
+			<div class="container">
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-12">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments List</h3>
+							<div class="table-responsive mb-3">
+								<table id="tableId" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Appointment ID</th>
+											<th>Patient ID</th>
+											<th>Token Number</th>
+											<th>Doctor Name</th>
+											<th>Problem</th>
+											<th>Status</th>
+											<th class="text-center align-middle">Actions</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										{% for appointment in appointments %}
+										<tr data-appointment-id="{{ appointment.id }}">
+											<td>{{ appointment.id }}</td>
+											<td>P{{ appointment.patient.id }}</td>
+											<td>{{ appointment.token_number }}</td>
+											<td>{{ appointment.doctor.name }}</td>
+											<td>{{ appointment.problem }}</td>
+											<td>
+												{% if appointment.status == 'Pending' %}
+												<span class="badge badge-warning">Pending</span>
+												{% elif appointment.status == 'Completed' %}
+												<span class="badge badge-primary">Completed</span>
+												{% else %}
+												<span class="badge badge-danger">Cancelled</span>
+												{% endif %}
+											</td>
+											<td class="text-center align-middle">
+												<button class="btn btn-primary edit-btn" data-id="{{ appointment.id }}">
+													<span class="ti-pencil"></span>EDIT
+												</button>
+												<button class="btn btn-danger delete-btn"
+													data-id="{{ appointment.id }}">
+													<span class="ti-trash"></span>DELETE
+												</button>
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+			</div>
+
+			<!-- /Main Content -->
+			<!--Copy Rights-->
+			<div class="container">
+				<div class="d-sm-flex justify-content-center">
+					<span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a
+							href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights
+						reserved.</span>
+				</div>
+			</div>
+			<!-- /Copy Rights-->
+		</div>
+		<!-- /Page Content -->
+	</div>
+	<!-- Back to Top -->
+	<a id="back-to-top" href="#" class="back-to-top">
+		<span class="ti-angle-up"></span>
+	</a>
+	<!-- /Back to Top -->
+
+	<!-- jQuery Library -->
+	<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
+	<!-- Popper Library -->
+	<script src="{% static 'js/popper.min.js' %}"></script>
+
+	<!-- Bootstrap Library -->
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+	<!-- Datatable -->
+	<script src="{% static 'datatable/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'datatable/dataTables.bootstrap4.min.js' %}"></script>
+
+	<!-- Custom Script -->
+	<script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+<script>
+	$(document).ready(function () {
+		$('#tableId').on('click', '.edit-btn', function () {
+			var appointmentId = $(this).data('id');
+			console.log('Edit button clicked, appointmentId:', appointmentId);
+
+			// Fetch appointment details using GET request
+			$.ajax({
+				url: '/api/appointments/' + appointmentId + '/',
+				method: 'GET',
+				success: function (data) {
+					console.log('GET request successful, data received:', data);
+					$('#appointment-date').val(data.appointment_date);
+					$('#time-slot').val(data.time_slot);
+					$('#patient-name').val(data.patient_name); // Assuming patient_name is provided by API
+					$('#patient-id').val(data.patient); // Assuming patient ID is provided by API
+					$('#doctor-name').val(data.doctor_name); // Assuming doctor_name is provided by API
+					$('#doctor-id').val(data.doctor); // Assuming doctor ID is provided by API
+					$('#problem').val(data.problem);
+					$('#status').val(data.status);
+					$('#editAppointmentForm').data('id', data.id); // Correctly set the appointment ID
+					$('#editAppointmentModal').modal("show");
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching appointment data:', error);
+				}
+			});
+		});
+		// Save changes button click event
+		$('#editAppointmentForm').on('submit', function (e) {
+			e.preventDefault();
+			var id = $('#editAppointmentForm').data('id'); // Correctly get the appointment ID
+			console.log('Form submit, appointmentId:', id);
+
+			// Debug logging for hidden fields
+			console.log('Hidden field patient-id:', $('#patient-id').val());
+			console.log('Hidden field doctor-id:', $('#doctor-id').val());
+
+			// Log form data before sending PUT request
+			var formData = {
+				appointment_date: $('#appointment-date').val(),
+				time_slot: $('#time-slot').val(),
+				patient: $('#patient-id').val(), // Send patient ID
+				doctor: $('#doctor-id').val(), // Send doctor ID
+				problem: $('#problem').val(),
+				status: $('#status').val()
+			};
+			console.log('Form data:', formData);
+
+			// Send PUT request to update appointment
+			$.ajax({
+				url: `/api/appointments/${id}/`,
+				method: 'PUT',
+				data: formData,
+				headers: {
+					'X-CSRFToken': '{{ csrf_token }}' // Include the CSRF token in the request headers
+				},
+				success: function (response) {
+					console.log('PUT request successful, response:', response);
+					location.reload();  // Reload page to see changes
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating appointment:', error);
+					console.error('Response Text:', xhr.responseText);
+				}
+			});
+		});
+		$('#tableId').on('click', '.delete-btn', function() {
+        var appointmentId = $(this).data('id');
+        var confirmation = confirm("Are you sure you want to delete this appointment?");
+
+        if (confirmation) {
+            $.ajax({
+                url: '/api/appointments/' + appointmentId + '/',
+                type: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    console.log('appointment deleted successfully:', data);
+                    // Optionally, remove deleted row from table
+                    $('tr[data-appointment-id="' + appointmentId + '"]').remove();
+                },
+                error: function(error) {
+                    console.error('Error deleting appointment:', error);
+                    alert('Error deleting appointment. Please try again.');
+                }
+            });
+        }
+    });
+	});
+</script>
+
+</html>

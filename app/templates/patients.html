@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ProClinic-Bootstrap4 Hospital Admin</title>
+    <!-- Fav Icon Link -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- themify icons CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- Animations CSS -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/green.css' %}" id="style_theme">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <!-- morris charts -->
+    <link rel="stylesheet" href="{% static 'charts/css/morris.css' %}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="{% static 'css/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'datatable/dataTables.bootstrap4.min.css' %}">
+  
+    <script src="{% static 'js/modernizr.min.js' %}"></script>
+</head>
+
+<body>
+    <!-- Pre Loader -->
+    <div class="loading">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    <!--/Pre Loader -->
+    <!-- Color Changer -->
+    <div class="theme-settings" id="switcher">
+        <span class="theme-click">
+            <span class="ti-settings"></span>
+        </span>
+        <span class="theme-color theme-default theme-active" data-color="green"></span>
+        <span class="theme-color theme-blue" data-color="blue"></span>
+        <span class="theme-color theme-red" data-color="red"></span>
+        <span class="theme-color theme-violet" data-color="violet"></span>
+        <span class="theme-color theme-yellow" data-color="yellow"></span>
+    </div>
+    <!-- /Color Changer -->
+    <div class="wrapper">
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navigation -->
+            <div class="container top-brand">
+                <nav class="navbar navbar-default">            
+                    <div class="navbar-header">
+                        <div class="sidebar-header"> <a href="{% url 'index' %}"><img src="{% static 'images/logo-dark.png' %}" class="logo" alt="logo"></a></div>
+                    </div>
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link">
+                                <span title="Fullscreen" class="ti-fullscreen fullscreen"></span>
+                            </a>                            
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="ti-user"></span>
+                            </a>
+                            <div class="dropdown-menu proclinic-box-shadow2 profile animated flipInY">
+                                <h5>{{ user.username }}</h5>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <span class="ti-power-off"></span> Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- /Top Navigation -->
+            <!-- Menu -->
+            <div class="container menu-nav">
+                {% include 'nav.html' %}
+            </div>
+            <!-- /Menu -->
+            <!-- Breadcrumb -->
+            <!-- Page Title -->
+            <div class="container mt-0">
+                <div class="row breadcrumb-bar">
+                    <div class="col-md-6">
+                        <h3 class="block-title">Patients</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{%url 'index'%}">
+                                    <span class="ti-home"></span>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">Patients</li>
+                            <li class="breadcrumb-item active">All Patients</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Title -->
+            <!-- /Breadcrumb -->
+            <!-- Main Content -->
+			<!-- Edit Patient Modal -->
+<div class="modal fade" id="editPatientModal" tabindex="-1" role="dialog" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPatientModalLabel">Edit Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form content goes here -->
+				<form id="editPatientForm" enctype="multipart/form-data">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="patient-name">Patient Name</label>
+							<input type="text" class="form-control" name="name" id="patient-name">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="dob">Date Of Birth</label>
+							<input type="date" class="form-control" name="date_of_birth" id="dob">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="age">Age</label>
+							<input type="text" class="form-control" name="age" id="age">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="phone">Phone</label>
+							<input type="text" class="form-control" name="phone" id="phone">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="email">Email</label>
+							<input type="email" class="form-control" name="email" id="email">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="gender">Gender</label>
+							<select class="form-control" name="gender" id="gender">
+								<option>Male</option>
+								<option>Female</option>
+								<option>Other</option>
+							</select>
+						</div>
+						<div class="form-group col-md-12">
+							<label for="address">Address</label>
+							<textarea class="form-control" name="address" id="address" rows="3"></textarea>
+						</div>
+						<div class="form-group col-md-12">
+							<label for="file">File</label>
+							<input type="file" class="form-control" name="file" id="file">
+						</div>
+						<div class="form-check col-md-12 mb-2">
+							<div class="custom-control custom-checkbox">
+								<input class="custom-control-input" type="checkbox" id="confirm">
+								<label class="custom-control-label" for="confirm">Please Confirm</label>
+							</div>
+						</div>
+						<div class="form-group col-md-6 mb-3">
+							<button type="submit" class="btn btn-primary btn-lg">Update</button>
+						</div>
+					</div>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+            <div class="container">
+                <div class="row">
+                    <!-- Widget Item -->
+                    <div class="col-md-12">
+                        <div class="widget-area-2 proclinic-box-shadow">
+                            <h3 class="widget-title">Patients List</h3>                            
+                            <div class="table-responsive mb-3">
+                                <table id="tableId" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="no-sort">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" id="select-all">
+                                                    <label class="custom-control-label" for="select-all"></label>
+                                                </div>
+                                            </th>
+                                            <th>Patient ID</th>
+                                            <th>Patient Name</th>
+                                            <th>Age</th>
+                                            <th>Phone</th>
+											<th  class="text-center align-middle">Actions</th>
+                                        </tr>
+                                    </thead>
+									<tbody>
+										{% for patient in patients %}
+										<tr data-patient-id="{{ patient.id }}">
+											<td>
+												<div class="custom-control custom-checkbox">
+													<input class="custom-control-input" type="checkbox" id="patient_{{ patient.id }}">
+													<label class="custom-control-label" for="patient_{{ patient.id }}"></label>
+												</div>
+											</td>
+											<td>P{{ patient.id }}</td>
+											<td>{{ patient.name }}</td>
+											<td>{{ patient.age }}</td>
+											<td>{{ patient.phone }}</td>
+											<td  class="text-center align-middle">
+												<!-- Edit button -->
+												<button type="button" class="btn btn-primary edit-btn" data-id="{{ patient.id }}">
+													<span class="ti-pencil-alt"></span> EDIT
+												</button>
+												<!-- Delete button -->
+												<button type="button" class="btn btn-danger delete-btn" data-id="{{ patient.id }}">
+													<span class="ti-trash"></span> DELETE
+												</button>
+											</td>                                        
+										</tr>
+										{% endfor %}
+									</tbody>
+									
+                                </table>
+								</button>
+							</div>
+                        </div>
+                    </div>
+                    <!-- /Widget Item -->
+                </div>
+            </div>
+            <!-- /Main Content -->
+            <!--Copy Rights-->
+            <div class="container">
+                <div class="d-sm-flex justify-content-center">
+                    <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
+                </div>
+            </div>
+            <!-- /Copy Rights-->
+        </div>
+        <!-- /Page Content -->
+    </div>
+    <!-- Back to Top -->
+    <a id="back-to-top" href="#" class="back-to-top">
+        <span class="ti-angle-up"></span>
+    </a>
+    <!-- /Back to Top -->
+
+    <!-- jQuery Library -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <!-- Popper Library -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap Library -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Datatable -->
+    <script src="{% static 'datatable/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'datatable/dataTables.bootstrap4.min.js' %}"></script>
+    <!-- Custom Script -->
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <script>
+     $(document).ready(function() {
+    // Delete button click event for individual patient deletion
+    $('#tableId').on('click', '.delete-btn', function() {
+        var patientId = $(this).data('id');
+        var confirmation = confirm("Are you sure you want to delete this patient?");
+
+        if (confirmation) {
+            $.ajax({
+                url: '/api/patients/' + patientId + '/',
+                type: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    console.log('Patient deleted successfully:', data);
+                    // Optionally, remove deleted row from table
+                    $('tr[data-patient-id="' + patientId + '"]').remove();
+                },
+                error: function(error) {
+                    console.error('Error deleting patient:', error);
+                    alert('Error deleting patient. Please try again.');
+                }
+            });
+        }
+    });
+
+    // Open edit modal and populate data
+    $('#tableId').on('click', '.edit-btn', function() {
+        var patientId = $(this).data('id');
+        // Fetch patient data from the API
+        $.ajax({
+            url: '/api/patients/' + patientId + '/',
+            type: 'GET',
+            success: function(data) {
+                // Populate modal fields with data
+                $('#editPatientModal #patient-name').val(data.name);
+                $('#editPatientModal #dob').val(data.date_of_birth);
+                $('#editPatientModal #age').val(data.age);
+                $('#editPatientModal #phone').val(data.phone);
+                $('#editPatientModal #email').val(data.email);
+                $('#editPatientModal #gender').val(data.gender);
+                $('#editPatientModal #address').val(data.address);
+                // Set the form action to update the patient
+                $('#editPatientForm').data('id', data.id);
+                // Show the modal
+                $('#editPatientModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching patient data:', error);
+            }
+        });
+    });
+
+    // Handle form submission for updating patient details
+    $('#editPatientForm').submit(function(event) {
+        event.preventDefault();
+        var patientId = $(this).data('id');
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: '/api/patients/' + patientId + '/',
+            type: 'PUT',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                console.log('Patient updated successfully:', response);
+                $('#editPatientModal').modal('hide');
+                // Optionally, refresh the table or reload the page
+                window.location.reload();
+            },
+            error: function(error) {
+                console.error('Error updating patient:', error);
+                alert('Error updating patient. Please check the data and try again.');
+            }
+        });
+    });
+});
+
+    </script>
+</body>
+</html>

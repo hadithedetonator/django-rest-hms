@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ProClinic-Bootstrap4 Hospital Admin</title>
+	<!-- Fav  Icon Link -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}">
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<!-- themify icons CSS -->
+	<link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+	<!-- Animations CSS -->
+	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" href="{% static 'css/green.css' %}" id="style_theme">
+	<link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+	<!-- morris charts -->
+	<link rel="stylesheet" href="{% static 'charts/css/morris.css' %}">
+	<!-- jvectormap -->
+	<link rel="stylesheet" href="{% static 'css/jquery-jvectormap.css' %}">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+	<script src="{% static 'js/modernizr.min.js' %}"></script>
+</head>
+
+<body>
+	<!-- Pre Loader -->
+	<div class="loading">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
+	<!--/Pre Loader -->
+	<!-- Color Changer -->
+	<div class="theme-settings" id="switcher">
+		<span class="theme-click">
+			<span class="ti-settings"></span>
+		</span>
+		<span class="theme-color theme-default theme-active" data-color="green"></span>
+		<span class="theme-color theme-blue" data-color="blue"></span>
+		<span class="theme-color theme-red" data-color="red"></span>
+		<span class="theme-color theme-violet" data-color="violet"></span>
+		<span class="theme-color theme-yellow" data-color="yellow"></span>
+	</div>
+	<!-- /Color Changer -->
+	<div class="wrapper">
+		<!-- Page Content -->
+		<div id="content"><!-- Top Navigation -->
+			<div class="container top-brand">
+				<nav class="navbar navbar-default">			
+					<div class="navbar-header">
+						<div class="sidebar-header"> <a href="{%url 'index'%}"><img src="{% static 'images/logo-dark.png' %}" class="logo" alt="logo"></a>
+						</div>
+					</div>
+					<ul class="nav justify-content-end">
+						<li class="nav-item">
+							<a class="nav-link">
+								<span title="Fullscreen" class="ti-fullscreen fullscreen"></span>
+							</a>							
+						</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+							 aria-expanded="false">
+								<span class="ti-user"></span>
+							</a>
+							<div class="dropdown-menu proclinic-box-shadow2 profile animated flipInY">
+								<h5>{{user.username}}</h5>
+								<a class="dropdown-item" href="{%url 'logout'%}">
+									<span class="ti-power-off"></span> Logout</a>
+							</div>
+						</li>
+					</ul>
+			
+				</nav>
+			</div>
+			<!-- /Top Navigation -->
+				<!-- Menu -->
+				<div class="container menu-nav">
+					{% include 'nav.html' %}
+				</div>
+				<!-- /Menu -->
+				<!-- Breadcrumb -->
+				<!-- Page Title -->
+				<div class="container mt-0">
+					<div class="row breadcrumb-bar">
+						<div class="col-md-6">
+							<h3 class="block-title">Add Appointment</h3>
+						</div>
+						<div class="col-md-6">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="{%url 'index'%}">
+										<span class="ti-home"></span>
+									</a>
+								</li>
+								<li class="breadcrumb-item">Appointments</li>
+								<li class="breadcrumb-item active">Add Appointment</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			<!-- /Page Title -->
+
+			<!-- /Breadcrumb -->
+			<!-- Main Content -->
+			<div class="container">
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-12">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Add Appointment</h3>
+							<form id="appointment-form">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="patient-id">Patient</label>
+										<input type="text" class="form-control" id="patient-id" placeholder="Patient">
+										<input type="hidden" id="patient-id-value" name="patient_id_value">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="department">Department</label>
+										<select class="form-control" id="department">
+											{% for department in departments %}
+											<option value="{{ department.0 }}">{{ department.1 }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="doctor-name">Doctor Name</label>
+										<select class="form-control" id="doctor-id" placeholder="Doctor Name">
+											{% for doctor in doctor_list %}
+											<option value="{{ doctor.id }}">{{ doctor.name }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="appointment-date">Appointment Date</label>
+										<input type="date" placeholder="Appointment Date" class="form-control" id="appointment-date">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="time-slot">Time Slot</label>
+										<select class="form-control" id="time-slot">
+											{% for time_slot in time_slots %}
+											<option value="{{ time_slot.0 }}">{{ time_slot.1 }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="token-number">Token Number <small>(Auto Generated)</small></label>
+										<input type="text" placeholder="Token Number" class="form-control" id="token-number" readonly>
+									</div>
+									<div class="form-group col-md-12">
+										<label for="problem">Problem</label>
+										<textarea placeholder="Problem" class="form-control" id="problem" rows="3"></textarea>
+									</div>
+									<div class="form-check col-md-12 mb-2">
+										<div class="text-left">
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="ex-check-2">
+												<label class="custom-control-label" for="ex-check-2">Please Confirm</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group col-md-6 mb-3">
+										<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+									</div>
+								</div>
+							</form>
+							<!-- Alerts-->
+							<div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+								<strong>Successfully Done!</strong> Appointment token Generated
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+								<strong>Holy guacamole!</strong> You should check in on some of those fields below.
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<!-- /Alerts-->
+						</div>
+					</div>
+					
+					<!-- /Widget Item -->
+				</div>
+			</div>
+			<!-- /Main Content -->
+			<!--Copy Rights-->
+			<div class="container">
+				<div class="d-sm-flex justify-content-center">
+				  <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
+				</div>
+			</div>
+			<!-- /Copy Rights-->
+		</div>
+		<!-- /Page Content -->
+	</div>
+	<!-- Back to Top -->
+	<a id="back-to-top" href="#" class="back-to-top">
+		<span class="ti-angle-up"></span>
+	</a>
+<!-- /Back to Top -->
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
+<!-- morris charts -->
+<script src="{% static 'charts/js/raphael-min.js'%}"></script>
+<script src="{% static 'charts/js/morris.min.js'%}"></script>
+<script src="{% static 'js/custom-morris.js'%}"></script>
+
+<!-- Custom Script-->
+<script src="{% static 'js/custom.js'%}"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+</body>
+<script>
+	$(document).ready(function () {
+		// Function to generate a unique token number
+		function generateToken() {
+			const timestamp = new Date().getTime();
+			const randomNum = Math.floor(Math.random() * 10000);
+			return `${timestamp}-${randomNum}`;
+		}
+	
+		// Set the token number on page load
+		$('#token-number').val(generateToken());
+	
+		// Initialize jQuery UI Autocomplete for Patient ID
+		$('#patient-id').autocomplete({
+			source: function (request, response) {
+				$.ajax({
+					url: '/patient-autocomplete/',
+					dataType: 'json',
+					data: {
+						term: request.term
+					},
+					success: function (data) {
+						response(data.map(patient => ({
+							label: patient.name,
+							value: patient.id
+						})));
+					}
+				});
+			},
+			select: function (event, ui) {
+				// Set the patient ID to the hidden field
+				$('#patient-id-value').val(ui.item.value);
+				$('#patient-id').val(ui.item.label); // Display the selected name
+				return false;
+			}
+		});
+	
+		// Form submission handler
+		$('#appointment-form').on('submit', function (e) {
+			e.preventDefault();
+	
+			 let formData = new FormData();
+			 formData.append("department", document.getElementById("department").value);
+			 formData.append("appointment_date", document.getElementById("appointment-date").value);
+			 formData.append("time_slot", document.getElementById("time-slot").value);
+			 formData.append("token_number", document.getElementById("token-number").value);
+			 formData.append('problem', document.getElementById('problem').value);
+			 formData.append("doctor", document.getElementById("doctor-id").value);
+			 formData.append("patient", document.getElementById("patient-id-value").value);
+// Log FormData to console
+for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+	fetch('http://127.0.0.1:8000/api/appointments/', {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': getCookie('csrftoken') // Ensure you handle CSRF tokens appropriately
+    },
+    body: formData
+})
+.then(response => {
+    if (response.ok) {
+        return response.json();
+    } else {
+        return response.json().then(data => {
+            console.log('Response data:', data); // Log the response data for debugging
+            throw new Error(data);
+        });
+    }
+})
+.then(data => {
+    document.querySelector('.alert-success').style.display = 'block';
+    document.getElementById('appointment-form').reset();
+})
+.catch(error => {
+    console.error('Error:', error);
+    document.querySelector('.alert-warning').style.display = 'block';
+});
+
+	});
+	
+		// Function to get CSRF token
+		function getCookie(name) {
+			let cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				const cookies = document.cookie.split(';');
+				for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+	});
+	</script>
+	
+	
+</html>
