@@ -18,7 +18,42 @@ The Hospital Management System is a web application developed using Django Rest 
 - **Deployment:** Django's built-in development server (can be deployed on platforms like AWS, Heroku, etc.)
 
 ## Setup Instructions
-1. Clone the repository:
+1. **Install Python:**
+   Make sure Python is installed on your system. You can download it from [python.org](https://www.python.org/downloads/) and follow the installation instructions.
+
+2. **Create a Virtual Environment:**
+   It's recommended to use a virtual environment to manage dependencies for your Django project.
+   
    ```bash
-   git clone https://github.com/hadithedetonator/django-rest-hms
-   cd hms
+   # Install virtualenv if you haven't already
+   pip install virtualenv
+   
+   # Create a virtual environment
+   virtualenv venv
+   
+   # Activate the virtual environment (on Windows)
+   venv\Scripts\activate
+   
+   # Activate the virtual environment (on macOS/Linux)
+   source venv/bin/activate
+
+ 3. **Install Django and Django Rest Framework:**
+```bash
+   # Install Django and Django Rest Framework using pip.
+    pip install django djangorestframework
+```
+4. **Clone and Setup Your Project:**
+```bash
+   # git clone https://github.com/hadithedetonator/django-rest-hms
+   cd django-rest-hms
+```
+5. **Create a Superuser**
+```bash
+python manage.py createsuperuser
+```
+6. **Run the Development Server**
+   ```bash
+   python manage.py runserver
+   ```
+![Image 1](1.png)
+![Image 2](2.png)
